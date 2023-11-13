@@ -32,8 +32,8 @@ class _MyAppState extends State<MyApp> {
             darkModeOn = !darkModeOn;
           });
         },
-        child: Icon(darkModeOn ? Icons.dark_mode_outlined : Icons.dark_mode,
-            color: darkModeOn ? Colors.white : Colors.black, size: 25),
+        child: Icon(darkModeOn ? Icons.brightness_4_rounded: Icons.brightness_5,
+            color: darkModeOn ?  Colors.white : Colors.black , size: 25)  ,
       ),
     );
   }
@@ -42,6 +42,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: darkModeOn ? ThemeData(brightness: Brightness.light) : ThemeData(brightness: Brightness.dark),
+        darkTheme: darkModeOn ? ThemeData.dark() : ThemeData.light(),
         home: Scaffold(
       body: Stack(
         children: [
@@ -55,7 +57,6 @@ class _MyAppState extends State<MyApp> {
               child: MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
-                  print("onPressed");
                   setState(() {
                     darkModeOn = !darkModeOn;
                   });

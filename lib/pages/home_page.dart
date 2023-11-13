@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_1/utils/request.dart';
+import 'package:study_1/widget/vertical_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,13 +21,11 @@ class _HomePageState extends State<HomePage> {
 
   void loadTextContent() async {
     try {
-      print("state loadTextContent");
       var data = await postRequest("", {"c": "i"});
       setState(() {
         textContent = data["hitokoto"];
         from = data["creator"];
       });
-      print("xxxx $data");
     } catch (e) {
       print("erorr $e");
     }
@@ -39,12 +38,18 @@ class _HomePageState extends State<HomePage> {
       radius: 90,
       backgroundColor: Colors.white70,
       foregroundImage: NetworkImage(
-          'https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302'),
+        'https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302',
+        scale: 0.5,
+      ),
     );
   }
 
   Widget textWidget() {
-    return  Text("$textContent-$from");
+    return  VerticalText(
+      textContent: textContent,
+      from: from,
+    );
+    // return Text(textContent);
   }
 
   @override
