@@ -41,10 +41,9 @@ class _VerticalTextState extends State<VerticalText> {
     List<String> textContentList = widget.textContent.split("");
     int numberOfLine =
         (textContentList.length / widget.numberOfSingleLineText).ceil();
-    int start = 0;
     print("widget.textContent ${widget.textContent}");
-    print("numberOfLine $numberOfLine");
-    print(textContentList);
+
+    int start = 0;
 
     for (int i = 0; i < numberOfLine; i++) {
       int end = start + widget.numberOfSingleLineText;
@@ -52,37 +51,57 @@ class _VerticalTextState extends State<VerticalText> {
         end = textContentList.length;
       }
       result.add(textContentList.sublist(start, end));
-      start++;
+      start+=widget.numberOfSingleLineText;
     }
 
-    print(result);
+    // for (int i = 0;i<=numberOfLine;i++){
+    //   int start = i * widget.numberOfSingleLineText;
+    //   int end = start + widget.numberOfSingleLineText;
+    //   if (end > textContentList.length) {
+    //     end = textContentList.length;
+    //   }
+    //   result.add(textContentList.sublist(start, end));
+    // }
 
     setState(() {
-      //反转
+      print("result $result");
       this.textContentList = result.reversed.toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child:Column(
-        children: [
-          createText(),
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            child: Text(
-              "--${widget.from}--",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
+    return animationWidget(
+        child:
+        Column(
+          children: [
+          const Padding(padding: EdgeInsets.only(top: 10)),
+            createText(),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Text(
+                "-- ${widget.from} --",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: widget.singleLineWidth + 1,
+                ),
               ),
             ),
-          ),
         ],
-      )
-      );
+    )
+    );
+  }
+
+
+  Widget animationWidget({required Widget child}) {
+    return AnimatedScale(
+        duration: const Duration(microseconds: 2000),
+        scale: widget.textContent != '' ? 1.0 : 0.0,
+        child: AnimatedRotation(
+          duration: const Duration(microseconds: 2000),
+          turns: widget.textContent != '' ? 1.0 : 0.0,
+          child: child,
+        ));
   }
 
   Widget createText() {
@@ -93,7 +112,7 @@ class _VerticalTextState extends State<VerticalText> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: columnResult,
     );
   }
@@ -103,11 +122,11 @@ class _VerticalTextState extends State<VerticalText> {
     list?.forEach((element) {
       result.add(Container(
           width: widget.singleLineWidth,
-          margin: const EdgeInsets.only(left: 5),
+          margin: const EdgeInsets.only(top: 5,left: 5),
           child: Text(
             element,
             textAlign: TextAlign.center,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: widget.singleLineWidth + 1,
             ),
           )));
