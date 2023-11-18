@@ -1,93 +1,91 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:study_1/pages/home_page.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
+import 'package:study_1/pages/index/index.dart';
+import 'package:study_1/router/routes.dart';
 import 'package:study_1/utils/request.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:study_1/utils/SharedPrefutil.dart';
+
+final router = FluroRouter();
 
 void main() {
   addInterceptors(); // 添加拦截器
+  Routes.configureRoutes(router); // 配置路由
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget  {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() {
-    return _MyAppState();
+  Widget build(BuildContext context) {
+    return CupertinoApp(
+      onGenerateRoute: router.generator,
+      home: const Diary(),
+    );
   }
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  bool darkModeOn = false;
+class Diary extends StatefulWidget {
+  const Diary({super.key});
 
-  @override // initState() 方法在 State 对象被插入视图树的时候调用，这个时候可以获取 BuildContext 和 State 对象的 context 属性
+  @override
+  State<Diary> createState() => _DiaryState();
+}
+
+class _DiaryState extends State<Diary> {
+  String? username = "";
+
+  @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // WidgetsBindingObserver 用于监听应用生命周期变化
-  }
-
-  @override // dispose 方法在 State 对象从视图树中被移除的时候调用
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // 移除监听
-    super.dispose();
-  }
-
-  @override // didChangePlatformBrightness 方法在平台主题变化的时候调用
-  void didChangePlatformBrightness() {
-    super.didChangePlatformBrightness();
-    setState(() {
-      darkModeOn = WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+    // 监听渲染事件，在渲染完成后跳转到AppConfig页面
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // _jumpToAppConfig();
     });
   }
 
+  // 渲染页面
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: darkModeOn ? ThemeData(brightness: Brightness.dark,fontFamily: 'ShuYunSong') : ThemeData(brightness: Brightness.light,fontFamily: 'ShuYunSong'),
-        darkTheme: darkModeOn ? ThemeData.dark() : ThemeData.light(),
-        home: Scaffold(
-      body: Stack(
-        children: [
-          const HomePage(),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: MaterialButton(
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  setState(() {
-                    darkModeOn = !darkModeOn;
-                  });
-                },
-                child: Icon(
-                    darkModeOn ? Icons.dark_mode_outlined : Icons.dark_mode_sharp,
-                    color: darkModeOn ?  Colors.white : Colors.black,
-                    size: 25),
-              ),
-            ),
-          ),
-        ],
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-    ));
-  }
-  Future<Widget> themeButton() async {
-    return SizedBox(
-      width: 30,
-      height: 30,
-      child: MaterialButton(
-        padding: const EdgeInsets.all(0),
-        onPressed: () {
-          setState(() {
-            darkModeOn = !darkModeOn;
-          });
-        },
-        child: Icon(darkModeOn ? Icons.brightness_4_rounded: Icons.brightness_5,
-            color: darkModeOn ?  Colors.white : Colors.black , size: 25)  ,
-      ),
+      home: const IndexPage(),
     );
+  }
+
+  // 跳转到AppConfig页面
+ void _jumpToAppConfig() async {
+    // 从SharedPrefUtil中获取用户名
+    var username = await SharedPrefUtil.instance.getString("username");
+    // 如果用户名为空，则跳转到config页面
+    if (username == null) {
+      router.navigateTo(context, Routes.config, clearStack: true);
+    } else {
+      // 否则弹出提示框
+      showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            // 返回一个CupertinoAlertDialog，标题为"欢迎回来"，内容为username，actions中有一个CupertinoDialogAction，child为"确定"，onPressed为弹出Navigator.of(context).pop()
+            return CupertinoAlertDialog(
+              title: const Text("欢迎回来"),
+              content: Text(username),
+              actions: [
+                CupertinoDialogAction(
+                  child: const Text("确定"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    }
   }
 }
