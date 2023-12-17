@@ -6,7 +6,7 @@ class DiaryListWidget {
   static Widget diaryList(List<Diary> allDiary) {
     if (allDiary.isEmpty || allDiary == []) {
       return const Center(
-        child: Text("暂无日记"),
+        child: Text("暂无日记", style: TextStyle(fontSize: 20)),
       );
     }
     List<Widget> diaryListWidget = [];

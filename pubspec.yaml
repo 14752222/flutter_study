@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   get: ^4.6.6
   dio: ^5.3.3
   fluro: ^2.0.5
@@ -40,6 +42,10 @@ dependencies:
   shared_preferences: ^2.2.2
   sqflite: ^2.3.0
   flutter_svg: ^2.0.9
+  intl: ^0.18.1
+  image_picker: ^1.0.4
+  image_picker_for_web: ^3.0.1
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -90,3 +96,44 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - assets/image/bg.jpg
+    - assets/image/emotion01.svg
+    - assets/image/emotion02.svg
+    - assets/image/emotion03.svg
+    - assets/image/emotion04.svg
+    - assets/image/emotion05.svg
+    - assets/image/emotion06.svg
+    - assets/image/emotion07.svg
+    - assets/image/emotion08.svg
+    - assets/image/emotion09.svg
+    - assets/image/emotion10.svg
+    - assets/image/emotion11.svg
+    - assets/image/emotion12.svg
+    - assets/image/emotion13.svg
+    - assets/image/emotion14.svg
+    - assets/image/emotion15.svg
+    - assets/image/emotion16.svg
+    - assets/image/emotion17.svg
+    - assets/image/emotion18.svg
+    - assets/image/emotion19.svg
+    - assets/image/weather01.svg
+    - assets/image/weather02.svg
+    - assets/image/weather03.svg
+    - assets/image/weather04.svg
+    - assets/image/weather05.svg
+    - assets/image/weather06.svg
+    - assets/image/weather07.svg
+    - assets/image/weather08.svg
+    - assets/image/weather09.svg
+    - assets/image/weather10.svg
+    - assets/image/weather11.svg
+    - assets/image/weather12.svg
+    - assets/image/weather13.svg
+    - assets/image/weather14.svg
+    - assets/image/weather15.svg
+    - assets/image/weather16.svg
+    - assets/image/weather17.svg
+    - assets/image/weather18.svg
+    - assets/image/weather19.svg
+    - assets/image/weather20.svg

@@ -14,6 +14,8 @@ class Db {
       // 创建数据库表
       await db.execute(createInfo);
     });
+
+    print("db: $db");
     _db[dbName] = db;
     return db;
   }

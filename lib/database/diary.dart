@@ -35,15 +35,17 @@ class DBColumns {
 
 // 类DiaryDb，用于操作数据库
 class DiaryDb {
-  late final Database _db;
-
+  final String dbName = 'diary.db';
+  late Database _db;
   DiaryDb() {
     _init();
   }
 
   // 初始化数据库
   void _init() async {
-    _db = await Db.getDatabase('diary.db', '''
+    print('初始化数据库');
+
+    _db = await Db.getDatabase(dbName, '''
       CREATE TABLE ${DBColumns.tableName} (
         ${DBColumns.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${DBColumns.columnTitle} TEXT,
@@ -108,8 +110,8 @@ class Diary {
   late String image;
   late String content;
   late bool textRightToLeft;
-  late Map weather;
-  late Map emotion;
+  late Map<String, dynamic> weather;
+  late Map<String, dynamic> emotion;
   late DateTime date;
 
   Diary();
@@ -129,15 +131,15 @@ class Diary {
   }
 
   // 将Map对象转换为Diary对象
-   Diary formMap(Map<String, Object?> map) {
+  Diary formMap(Map<String, Object?> map) {
     return Diary()
       ..id = map[DBColumns.columnId] as int
       ..title = map[DBColumns.columnTitle] as String
       ..image = map[DBColumns.columnImage] as String
       ..content = map[DBColumns.columnContent] as String
       ..textRightToLeft = map[DBColumns.columnTextRightToLeft] == 1
-      ..weather = map[DBColumns.columnWeather] as Map
-      ..emotion = map[DBColumns.columnEmotion] as Map
+      ..weather = map[DBColumns.columnWeather] as Map<String, dynamic>
+      ..emotion = map[DBColumns.columnEmotion] as Map<String, dynamic>
       ..date = DateTime.parse(map[DBColumns.columnDate] as String);
   }
 
@@ -167,3 +169,6 @@ class Diary {
     };
   }
 }
+
+// 实例化DiaryDb对象
+final DiaryDb diaryDb = DiaryDb();

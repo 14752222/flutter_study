@@ -1,9 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'package:study_1/pages/index/index.dart';
-import 'package:study_1/pages/home/index.dart';
 import 'package:study_1/pages/config/index.dart';
+import 'package:study_1/pages/home/index.dart';
+import 'package:study_1/pages/index/index.dart';
 import 'package:study_1/pages/write/index.dart';
 
 // 这是一个 Handler 类型的函数，用于定义路由处理函数
@@ -20,8 +19,10 @@ var configHandler = Handler(
         const ConfigPage());
 
 var writeHandler = Handler(
-    handlerFunc: (BuildContext? context, Map<String, List<String>> params) =>
-        const WritePage());
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  final String id = params["id"]?.first ?? ""; // 获取参数 id
+  return WritePage(id: id);
+});
 
 class Routes {
   static String index = "/";
@@ -33,7 +34,7 @@ class Routes {
     router.define(index, handler: indexHandler);
     router.define(home, handler: homeHandler);
     router.define(config, handler: configHandler);
-    router.define(write, handler: writeHandler);
+    router.define("$write/:id", handler: writeHandler);
     router.notFoundHandler = homeHandler;
   }
 }

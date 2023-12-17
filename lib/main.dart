@@ -1,18 +1,23 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:study_1/database/Db.dart';
 import 'package:study_1/pages/index/index.dart';
 import 'package:study_1/router/routes.dart';
-import 'package:study_1/utils/request.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:study_1/store/write_store.dart';
 import 'package:study_1/utils/SharedPrefutil.dart';
+import 'package:study_1/utils/request.dart';
 
 final router = FluroRouter();
 
 void main() {
   addInterceptors(); // 添加拦截器
   Routes.configureRoutes(router); // 配置路由
+  var _ = Db(); // 初始化数据库
+
   runApp(const MyApp());
 }
 
@@ -23,7 +28,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       onGenerateRoute: router.generator,
+      debugShowCheckedModeBanner: false,
       home: const Diary(),
+      localizationsDelegates: const [
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('zh', 'CH')],
+      locale: const Locale('zh', 'CN'),
     );
   }
 }
@@ -43,7 +56,7 @@ class _DiaryState extends State<Diary> {
     super.initState();
     // 监听渲染事件，在渲染完成后跳转到AppConfig页面
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // _jumpToAppConfig();
+      _jumpToAppConfig();
     });
   }
 
@@ -51,8 +64,11 @@ class _DiaryState extends State<Diary> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
+      initialBinding: BindingsBuilder(() {
+        Get.put(WriteController());
+      }),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -61,7 +77,7 @@ class _DiaryState extends State<Diary> {
   }
 
   // 跳转到AppConfig页面
- void _jumpToAppConfig() async {
+  void _jumpToAppConfig() async {
     // 从SharedPrefUtil中获取用户名
     var username = await SharedPrefUtil.instance.getString("username");
     // 如果用户名为空，则跳转到config页面

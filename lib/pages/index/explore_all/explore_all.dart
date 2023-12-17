@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:study_1/main.dart' hide Diary;
 import 'package:study_1/pages/index/widget/diary_list_widget.dart';
-
 import 'package:study_1/utils/Colors.dart';
 
 import '../../../database/diary.dart';
+import '../../../router/routes.dart';
 
 class ExploreAllPage extends StatefulWidget {
   const ExploreAllPage({super.key});
@@ -21,22 +22,19 @@ class _ExploreAllPageState extends State<ExploreAllPage> {
     super.initState();
   }
 
-  void loadDiaryAll()  async{
+  void loadDiaryAll() async {
     var allDiaryRow = await DiaryDb().queryAll();
-     allDiary.clear();
+    allDiary.clear();
 
-     if (allDiaryRow.isNotEmpty) {
-       for (var item in allDiaryRow) {
-         allDiary.add(Diary().formMap(item as Map<String, Object?>));
-       }
-     }
-
+    if (allDiaryRow.isNotEmpty) {
+      for (var item in allDiaryRow) {
+        allDiary.add(Diary().formMap(item as Map<String, Object?>));
+      }
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
         width: double.infinity,
         height: double.infinity,
@@ -52,9 +50,10 @@ class _ExploreAllPageState extends State<ExploreAllPage> {
             topRight: Radius.circular(20),
           ),
         ),
-        child:  Stack(
-          children: [DiaryListWidget.diaryList(allDiary), addNewDiaryButton()]
-        ));
+        child: Stack(children: [
+          DiaryListWidget.diaryList(allDiary),
+          addNewDiaryButton()
+        ]));
   }
 
   Widget addNewDiaryButton() {
@@ -62,7 +61,9 @@ class _ExploreAllPageState extends State<ExploreAllPage> {
       right: 20,
       bottom: 20,
       child: CupertinoButton(
-        onPressed: () {},
+        onPressed: () {
+          router.navigateTo(context, "${Routes.write}/-1");
+        },
         child: Container(
           width: 60,
           height: 60,
@@ -77,7 +78,7 @@ class _ExploreAllPageState extends State<ExploreAllPage> {
                   blurRadius: 15.0,
                   spreadRadius: 0.1,
                 )
-              ] ),
+              ]),
           child: const Icon(
             CupertinoIcons.add,
             color: Colors.white,
